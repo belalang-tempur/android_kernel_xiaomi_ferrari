@@ -21,6 +21,11 @@
 #include <asm/backlight.h>
 #endif
 
+#ifdef CONFIG_POWERSUSPEND
+#include <linux/powersuspend.h>
+#endif
+
+
 static const char *const backlight_types[] = {
 	[BACKLIGHT_RAW] = "raw",
 	[BACKLIGHT_PLATFORM] = "platform",
@@ -217,6 +222,11 @@ static int backlight_suspend(struct device *dev, pm_message_t state)
 		bd->props.state |= BL_CORE_SUSPENDED;
 		backlight_update_status(bd);
 	}
+
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_ACTIVE);
+#endif
+
 	mutex_unlock(&bd->ops_lock);
 
 	return 0;
@@ -231,6 +241,11 @@ static int backlight_resume(struct device *dev)
 		bd->props.state &= ~BL_CORE_SUSPENDED;
 		backlight_update_status(bd);
 	}
+
+#ifdef CONFIG_POWERSUSPEND
+	set_power_suspend_state_panel_hook(POWER_SUSPEND_INACTIVE);
+#endif
+
 	mutex_unlock(&bd->ops_lock);
 
 	return 0;
