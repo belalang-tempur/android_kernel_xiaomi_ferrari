@@ -122,6 +122,7 @@ static void buffer_size_add_locked(struct persistent_ram_zone *prz, size_t a)
 exit:
 	raw_spin_unlock_irqrestore(&buffer_lock, flags);
 }
+
 static size_t (*buffer_start_add)(struct persistent_ram_zone *, size_t) = buffer_start_add_atomic;
 static void (*buffer_size_add)(struct persistent_ram_zone *, size_t) = buffer_size_add_atomic;
 
